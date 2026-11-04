@@ -15,7 +15,7 @@ async function loadData() {
 
             const searchInput = document.getElementById('searchInput');
             searchInput.disabled = false;
-            searchInput.placeholder = 'Ingresa SAP, nombre, ciudad o dirección del PDV';
+            searchInput.placeholder = 'Ingresa SAP, nombre o ciudad del PDV';
         }
     } catch (error) {
         console.error("Error al cargar datos:", error);
@@ -28,7 +28,7 @@ async function loadData() {
 
 function initializeFuse() {
     const options = {
-        keys: ['SAP', 'PDV', 'CIUDAD', 'DIRECCION'],
+        keys: ['SAP', 'PDV', 'CIUDAD'],
         threshold: 0.3,
     };
     fuse = new Fuse(allData, options);
@@ -52,21 +52,12 @@ function performSearch(query) {
     renderResults(results);
 }
 
-// Devuelve el link de Google Maps solo si LATITUD/LONGITUD son coordenadas válidas (no "Sin Geo")
-function getMapUrl(result) {
-    const lat = parseFloat(result.LATITUD);
-    const lng = parseFloat(result.LONGITUD);
-    if (isNaN(lat) || isNaN(lng)) return null;
-    return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-}
-
 function renderResults(results) {
     let output = `<h2>Resultados (${results.length} encontrados):</h2>`;
 
     if (results.length > 0) {
         results.forEach(result => {
             const nombre = result.PDV || 'Sin nombre';
-            const mapUrl = getMapUrl(result);
 
             output += `
                 <div class="result-item pdv" role="region" aria-label="${nombre}">
@@ -80,11 +71,6 @@ function renderResults(results) {
                     <ul>
                         <li><strong>SAP:</strong> ${result.SAP}
                             <i class="material-icons copy-icon" role="button" tabindex="0" aria-label="Copiar SAP" onclick="copyToClipboard('${result.SAP}')">content_copy</i>
-                        </li>
-                        <li><strong>Dirección:</strong> ${result.DIRECCION || 'N/A'}</li>
-                        <li><strong>Ubicación:</strong> ${mapUrl
-                            ? `<a class="map-link" href="${mapUrl}" target="_blank" rel="noopener"><i class="material-icons">place</i>Ver en mapa</a>`
-                            : 'Sin Geo'}
                         </li>
                     </ul>
                 </div>
