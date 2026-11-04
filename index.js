@@ -4,10 +4,11 @@ const fetch = require("node-fetch");
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const { API_TOKEN, PDV_ENDPOINT_URL } = process.env;
+const { API_TOKEN } = process.env;
+const PDV_ENDPOINT_URL = "https://botai.smartdataautomation.com/api_backend_ai/dinamic-db/report/119/pdv_nutrefrios";
 
-if (!API_TOKEN || !PDV_ENDPOINT_URL) {
-    console.error("❌ Faltan variables de entorno: API_TOKEN y PDV_ENDPOINT_URL son obligatorias");
+if (!API_TOKEN) {
+    console.error("❌ Falta la variable de entorno API_TOKEN");
     process.exit(1);
 }
 
